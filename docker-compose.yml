@@ -1,0 +1,28 @@
+version: "3.8"
+
+networks:
+    ultron_net:
+        driver: bridge
+services:
+    elasticsearch:
+        env_file: ./.env
+        image: bitnami/elasticsearch:7.9.1
+        container_name: ultron_elasticsearch
+        ports:
+            - "${ELASTICSEARCH_PORT}:9200"
+        volumes:
+            - ${ELASTICSEARCH_DATA_PATH}:/bitnami/elasticsearch/data
+        networks:
+            - ultron_net
+    kibana:
+        env_file: ./.env
+        image: bitnami/kibana:7.9.1
+        container_name: ultron_kibana
+        ports:
+            - "${KIBANA_PORT}:5601"
+        environment:
+            - KIBANA_ELASTICSEARCH_URL=elasticsearch
+        networks:
+            - ultron_net
+        depends_on:
+            - elasticsearch
