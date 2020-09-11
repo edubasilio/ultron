@@ -14,15 +14,33 @@ services:
             - ${ELASTICSEARCH_DATA_PATH}:/bitnami/elasticsearch/data
         networks:
             - ultron_net
-    kibana:
+    # kibana:
+    #     env_file: ./.env
+    #     image: bitnami/kibana:7.9.1
+    #     container_name: ultron_kibana
+    #     ports:
+    #         - "${KIBANA_PORT}:5601"
+    #     environment:
+    #         - KIBANA_ELASTICSEARCH_URL=elasticsearch
+    #     networks:
+    #         - ultron_net
+    #     depends_on:
+    #         - elasticsearch
+    ultron-web:
         env_file: ./.env
-        image: bitnami/kibana:7.9.1
-        container_name: ultron_kibana
+        image: ultron/ultron-web
+        build:
+            context: ./ultron-web
+        container_name: ultron_web
         ports:
-            - "${KIBANA_PORT}:5601"
-        environment:
-            - KIBANA_ELASTICSEARCH_URL=elasticsearch
+            - "${HOST_HTTP_DEV_PORT}:8000"
         networks:
             - ultron_net
+        entrypoint: ["sh","/app/ultron-web/entrypoint.sh"]  
+        volumes:
+            - ./ultron-web:/app/ultron-web
+            - ${STATICFILES_PATH}:/app/staticfiles
+            - ${MEDIA_PATH}:/app/media
         depends_on:
             - elasticsearch
+
