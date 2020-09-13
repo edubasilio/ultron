@@ -1,6 +1,9 @@
 # Ultron
 Pequena API REST para pesquisa na base de dados Ultron
 
+# Arquitetura
+![Alt text](project/ultron-arch-diagram.png?raw=true "Arquiteruta Ultron")
+
 # Tecnologias
 * **Python** como linhguagem de programação
 * **Django** como framework de aplicação web
@@ -12,7 +15,7 @@ Pequena API REST para pesquisa na base de dados Ultron
 * **Postgres** como _engine_ de banco de dados
 
 # Instalação
-1. Instale o Docker e Docker-Compose;
+1. Na máquina _host_, [instale o Docker e Docker-Compose](https://medium.com/@basiliocode/install-docker-on-ubuntu-18-04-71d91c3911c5);
 2. Faça o download deste repositório git;
 3. No diretório `raiz` (diretório que contém o arquivo `docker-compose.yml`), crie um arquivo `.env` para guardar as variáveis de ambiente do projeto. Segue um exemplo do arquivo `.env`:
 ```env
@@ -21,8 +24,8 @@ SECRET_KEY=+p1-v2)-1mgln%m2&_3bxkszjx^89g3jbonf(kz1o605n=b7-&
 
 DB_DATA_PATH=/caminho/absoluto/para/data
 DB_ENGINE=django.db.backends.postgresql
-DB_NAME=escola
-DB_USER=escola_user
+DB_NAME=ultron
+DB_USER=ultron_user
 DB_PASSWORD=password
 DB_HOST=database/url
 DB_PORT=5432
@@ -54,17 +57,17 @@ Sobre as variáveis de ambiente:
 * `DB_HOST` [Define o endereço do banco de dados](https://docs.djangoproject.com/en/3.0/ref/settings/#host). Neste projeto, o endereço do container docker com o banco de dados é `db`
 * `DB_PORT` Define a porta de acesso do banco de dados. O banco de dados no container docker deste projeto escuta a porta 5432
 * `ALLOWED_HOSTS` Define as [URLs válidas](https://docs.djangoproject.com/en/3.0/ref/settings/#allowed-hosts) de acesso ao sistema separadas por espaço. Para acessar o sistema localmente, edite o arquivo `hosts` (`/etc/hosts no Ubuntu`) na máquina host recionando a URL para a máquina local
-* `HOST_HTTP_PORT` Define a porta, na máquina host, de acesso HTTP ao sistema. **Certifique-se de que esta porta na máquina host esteja livre**. No Docker a requisição passará pelo servidor proxy (NGINX) no container docker `escola_proxy` que redirecionará para o servidor da aplicação (GUNICORN) no container docker `escola_web`
+* `HOST_HTTP_PORT` Define a porta, na máquina host, de acesso HTTP ao sistema. **Certifique-se de que esta porta na máquina host esteja livre**. No Docker a requisição passará pelo servidor proxy (NGINX) no container docker `ultron_proxy` que redirecionará para o servidor da aplicação (GUNICORN) no container docker `ultron_web`
 * `HOST_HTTP_DEV_PORT` Define a porta, na máquina host, de acesso direto ao sistema através do servidor de desenvolvimento _runserver_ do django. **Certifique-se de que esta porta na máquina host esteja livre**. Este servidor só funcionará quando o valor de `MULTISTAGE` for diferente de `PROD`
 * `GUNICORN_WORKERS` Define a [quantidade de workers](https://docs.gunicorn.org/en/stable/configure.html#configuration-file) para o servidor de produção Gunicorn
 * `KIBANA_PORT=5601`
 * `ELASTICSEARCH_PORT`
 * `ELASTICSEARCH_DATA_PATH` Certifique-se de que o container docker tenha permissão de escrita neste diretório. Para efeito de teste, recomenda-se usar permissão 777
 
-# Iniciar, Parar e Criar um superusuário
+# Rodando
 
 ## Iniciar o serviço
-Com o terminal no diretório `escola` (diretório que contém o arquivo `docker-compose.yml`), faça:
+Com o terminal no diretório `ultron` (diretório que contém o arquivo `docker-compose.yml`), faça:
 ```sh
 docker-compose up -d --build
 ```
@@ -74,14 +77,15 @@ docker-compose up -d --build
 docker-compose down
 ```
 
-## Criar um superusuário
+## Criar um superusuário no sistema _ultron-web_
 Com o serviço iniciado, no terminal faça:
 ```sh
-docker exec -it escola_web pipenv run ./manage.py createsuperuser
+docker exec -it ultron_web poetry run ./manage.py createsuperuser
 ```
 
+# Para o Desenvolvedor
 ## Diagrama de Classes
 
-![Alt text](project/escola-class-diagram.png?raw=true "Diagrama de Classes")
+![Alt text](project/ultron-class-diagram.png?raw=true "Diagrama de Classes")
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
