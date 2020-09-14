@@ -38,7 +38,6 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=lambda v: {s.replace('*.','.') for 
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # third-aprty libraries
+    'rest_framework',
+
+    # local apps
+    'recortes.apps.RecortesConfig',
 ]
 
 MIDDLEWARE = [
@@ -97,6 +102,11 @@ DATABASES = {
     }
 }
 
+DATABASE_APPS_MAPPING = {
+    'recortes': 'ultron',
+}
+
+DATABASE_ROUTERS = ['ultron_web.database_router.DatabaseAppRouter',]
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
