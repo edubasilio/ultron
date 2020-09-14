@@ -8,7 +8,8 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 ENV PATH="${PATH}:/root/.poetry/bin"
 RUN poetry self update
 RUN poetry config virtualenvs.create false
-#RUN poetry install --no-interaction --no-ansi
 
-WORKDIR /app/ultron-web
-COPY . /app/ultron-web
+WORKDIR /app/ultron_web
+COPY . /app/ultron_web
+
+RUN poetry install --no-interaction --no-ansi

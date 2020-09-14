@@ -26,21 +26,20 @@ services:
     #         - ultron_net
     #     depends_on:
     #         - elasticsearch
-    ultron-web:
+    ultron_web:
         env_file: ./.env
         image: ultron/ultron-web
         build:
-            context: ./ultron-web
+            context: ./ultron_web
         container_name: ultron_web
         ports:
             - "${HOST_HTTP_DEV_PORT}:8000"
         networks:
             - ultron_net
-        entrypoint: ["sh","/app/ultron-web/entrypoint.sh"]  
+        entrypoint: ["sh","/app/ultron_web/entrypoint.sh"]
         volumes:
-            - ./ultron-web:/app/ultron-web
+            - ./ultron_web:/app/ultron_web
             - ${STATICFILES_PATH}:/app/staticfiles
             - ${MEDIA_PATH}:/app/media
         depends_on:
             - elasticsearch
-
