@@ -1,20 +1,20 @@
 #!bin/sh
 
-### WAIT FOR MYSQL ###
-# RETRIES=7
-# while [ "$RETRIES" -gt 0 ]
-# do
-#     echo "Waiting for MySQL Server, $RETRIES remaining atempts..."
-#     RETRIES=$((RETRIES-1))
-#     MYSQL_STATUS="$(nc -z database 3306)"
-#     MYSQL_EXIT=$(echo $?)
-#     echo "MySQL Status: $MYSQL_EXIT - $MYSQL_STATUS"
-#     if [ "$MYSQL_EXIT" = "0" ]; then
-#         RETRIES=0
-#     else
-#         sleep 5
-#     fi
-# done
+### WAIT FOR ULTRON REMOTE DATABASE ###
+RETRIES=7
+while [ "$RETRIES" -gt 0 ]
+do
+    echo "Waiting for Ultron Postgres Server, $RETRIES remaining atempts..."
+    RETRIES=$((RETRIES-1))
+    PG_STATUS="$(pg_isready -h ${ULTRON_DB_HOST} -p ${ULTRON_DB_PORT} -d ${ULTRON_DB_NAME} -U ${ULTRON_DB_USER})"
+    PG_EXIT=$(echo $?)
+    echo "Ultron Postgres Status: $PG_EXIT - $PG_STATUS"
+    if [ "$PG_EXIT" = "0" ]; then
+        RETRIES=0
+    else
+        sleep 5
+    fi
+done
 
 if [ ${MULTISTAGE} = "LOCAL" ]; then
      while :
