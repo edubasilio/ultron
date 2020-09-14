@@ -16,6 +16,7 @@ class Recorte(models.Model):
     nup_invalido_msg = models.CharField(max_length=120, verbose_name=_('NUP Invalido Mensagem'))
 
     class Meta:
+        managed = False
         verbose_name = _('Recorte')
         verbose_name_plural = _('Recortes')
     
