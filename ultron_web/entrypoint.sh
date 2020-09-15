@@ -19,7 +19,6 @@ done
 if [ ${MULTISTAGE} = "LOCAL" ]; then
      while :
      do
-        clear &&
         echo "MULTISTAGE: LOCAL. Access container with docker exec -it ultron_web zsh"
         echo "For outher stage change MULTISTAGE enviroment variable:"
         echo "- For LOCAL stage, use LOCAL"
@@ -27,7 +26,8 @@ if [ ${MULTISTAGE} = "LOCAL" ]; then
         echo "- For STAGE stage, use STAG"
         echo "- For PRODUCTION stage, use PROD"
         echo "Ctr+C for exit"
-        sleep 30
+        sleep 420
+        clear
     done
 else
     # DJANGO MIGRATE AND COLLECT STATIC FILES ###
