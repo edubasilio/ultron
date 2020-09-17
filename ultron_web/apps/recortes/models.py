@@ -17,6 +17,7 @@ class Recorte(models.Model):
 
     class Meta:
         managed = False
+        ordering = ['id']
         verbose_name = _('Recorte')
         verbose_name_plural = _('Recortes')
     

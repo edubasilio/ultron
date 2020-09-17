@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 from decouple import config
+from celery.schedules import crontab
 
 
 MULTISTAGE = config("MULTISTAGE", default="PROD")
@@ -47,10 +48,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # third-aprty libraries
+    'django_extensions',
+    'django_celery_beat',
+    'haystack',
     'rest_framework',
 
     # local apps
     'recortes.apps.RecortesConfig',
+    'config.apps.ConfigConfig',
 ]
 
 MIDDLEWARE = [
@@ -104,6 +109,7 @@ DATABASES = {
 
 DATABASE_APPS_MAPPING = {
     'recortes': 'ultron',
+    'config': 'default',
 }
 
 DATABASE_ROUTERS = ['ultron_web.database_router.DatabaseAppRouter',]
@@ -145,3 +151,30 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Celery settings
+CELERY_BROKER_URL = "amqp://{user}:{passw}@rabbitmq:5672/".format(
+    user=config('RABBITMQ_USERNAME'),
+    passw=config('RABBITMQ_PASSWORD')
+)
+#CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_BEAT_SCHEDULE = {
+    'sample_task': {
+        'task': 'recortes.tasks.get_recortes',
+        'schedule': 60,
+        'args': (10,)
+    },
+}
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch2_backend.Elasticsearch2SearchEngine',
+        'URL': "http://elasticsearch:{port}/".format(port=config('ELASTICSEARCH_PORT')),
+        'INDEX_NAME': 'haystack',
+    },
+}

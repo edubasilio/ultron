@@ -4,28 +4,28 @@ networks:
     ultron_net:
         driver: bridge
 services:
-    elasticsearch:
-        env_file: ./.env
-        image: bitnami/elasticsearch:7.9.1
-        container_name: ultron_elasticsearch
-        ports:
-            - "${ELASTICSEARCH_PORT}:9200"
-        volumes:
-            - ${ELASTICSEARCH_DATA_PATH}:/bitnami/elasticsearch/data
-        networks:
-            - ultron_net
-    # kibana:
+    # elasticsearch:
     #     env_file: ./.env
-    #     image: bitnami/kibana:7.9.1
-    #     container_name: ultron_kibana
+    #     image: bitnami/elasticsearch:7.8.1
+    #     container_name: ultron_elasticsearch
     #     ports:
-    #         - "${KIBANA_PORT}:5601"
-    #     environment:
-    #         - KIBANA_ELASTICSEARCH_URL=elasticsearch
+    #         - "${ELASTICSEARCH_PORT}:9200"
+    #     volumes:
+    #         - ${ELASTICSEARCH_DATA_PATH}:/bitnami/elasticsearch/data
     #     networks:
     #         - ultron_net
-    #     depends_on:
-    #         - elasticsearch
+
+    rabbitmq:
+        env_file: ./.env
+        image: bitnami/rabbitmq:3.8.8
+        container_name: ultron_rabbitmq
+        ports:
+            - "${RABBITMQ_MANAGER_PORT_NUMBER}:15672"
+        networks:
+            - ultron_net
+        volumes:
+            - "${RABBITMQ_DATA_PATH}:/bitnami" 
+
     ultron_web:
         env_file: ./.env
         image: ultron/ultron-web
@@ -42,4 +42,41 @@ services:
             - ${STATICFILES_PATH}:/app/staticfiles
             - ${MEDIA_PATH}:/app/media
         depends_on:
-            - elasticsearch
+            - rabbitmq
+        
+    # logstash:
+    #     env_file: ./.env
+    #     image: docker.elastic.co/logstash/logstash:7.8.1
+    #     container_name: ultron_logstash
+    #     volumes:
+    #         - type: bind
+    #           source: ./logstash/config/logstash.yml
+    #           target: /usr/share/logstash/config/logstash.yml
+    #           read_only: true
+    #         - type: bind
+    #           source: ./logstash/pipeline
+    #           target: /usr/share/logstash/pipeline
+    #           read_only: true
+    #     environment:
+    #         LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    #     ports:
+    #         - "${HOST_LOGSTASH_BEATS_PORT}:5000"
+    #         - "${HOST_LOGSTASH_API_PORT}:9600"
+    #     networks:
+    #         - ultron_net
+    #     depends_on:
+    #         - elasticsearch
+        
+    # kibana:
+    #     env_file: ./.env
+    #     image: bitnami/kibana:7.8.1
+    #     container_name: ultron_kibana
+    #     ports:
+    #         - "${KIBANA_PORT}:5601"
+    #     environment:
+    #         - KIBANA_ELASTICSEARCH_URL=elasticsearch
+    #     networks:
+    #         - ultron_net
+    #     depends_on:
+    #         - elasticsearch
+    

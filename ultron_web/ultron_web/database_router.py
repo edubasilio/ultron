@@ -15,5 +15,5 @@ class DatabaseAppRouter:
         return True if app_obj1 == app_obj2 else False
     
     def allow_migrate(self, db, app_label, model_name=None, **hints):
-        return None if db == 'ultron' else db
+        return False if db == 'ultron' else db
         
