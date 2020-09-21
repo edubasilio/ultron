@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_celery_beat',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_elasticsearch_dsl',
 
     # local apps
@@ -175,4 +176,11 @@ ELASTICSEARCH_DSL = {
     'default': {
         'hosts': "elasticsearch:{port}".format(port=config('ELASTICSEARCH_PORT'))
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
 }
