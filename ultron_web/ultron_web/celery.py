@@ -13,6 +13,10 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 
+# app.conf.task_router = {
+#     'recortes.tasks.send': {'queue': 'for_es'}
+# }
+
 @app.task(bind=True)
 def debug_task(self):
     print("Request: {0!r}".format(self.request))

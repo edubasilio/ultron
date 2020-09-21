@@ -6,17 +6,18 @@ authors = ["Eduardo Basilio"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-django-haystack = "^2.8.1"
 djangorestframework = "^3.11.1"
-django = "^3.1.1"
 gunicorn = "^20.0.4"
-elasticsearch = "5.3"
 python-decouple = "^3.3"
 psycopg2 = "^2.8.6"
 celery = "^4.4.7"
 librabbitmq = "^2.0.0"
 django-celery-beat = "^2.0.0"
 flower = "^0.9.5"
+django = "3"
+django-elasticsearch-dsl = "^7.1.4"
+pika = "^1.1.0"
+celery-message-consumer = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
 django-extensions = "^3.0.8"

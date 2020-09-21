@@ -50,8 +50,8 @@ INSTALLED_APPS = [
     # third-aprty libraries
     'django_extensions',
     'django_celery_beat',
-    'haystack',
     'rest_framework',
+    'django_elasticsearch_dsl',
 
     # local apps
     'recortes.apps.RecortesConfig',
@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'ultron_web.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
     },
     'ultron': {
         "ENGINE": config("ULTRON_DB_ENGINE"),
@@ -157,24 +157,22 @@ CELERY_BROKER_URL = "amqp://{user}:{passw}@rabbitmq:5672/".format(
     user=config('RABBITMQ_USERNAME'),
     passw=config('RABBITMQ_PASSWORD')
 )
-#CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ['application/json']
 # CELERY_TASK_SERIALIZER = 'json'
 # CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
 CELERY_BEAT_SCHEDULE = {
-    'sample_task': {
-        'task': 'recortes.tasks.get_recortes',
-        'schedule': 60,
-        'args': (10,)
+    'get_recortes_from_db_task': {
+        'task': 'recortes.tasks.get_recortes_from_db_task',
+        'schedule': 20,
+        #'args': (3,)
     },
 }
 
-HAYSTACK_CONNECTIONS = {
+ELASTICSEARCH_DSL = {
     'default': {
-        'ENGINE': 'haystack.backends.elasticsearch2_backend.Elasticsearch2SearchEngine',
-        'URL': "http://elasticsearch:{port}/".format(port=config('ELASTICSEARCH_PORT')),
-        'INDEX_NAME': 'haystack',
+        'hosts': "elasticsearch:{port}".format(port=config('ELASTICSEARCH_PORT'))
     },
 }

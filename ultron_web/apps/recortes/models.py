@@ -1,8 +1,24 @@
 from django.utils.translation import gettext as _
 from django.db import models
 
-# Create your models here.
-class Recorte(models.Model):
+from django_elasticsearch_dsl.registries import registry
+
+
+class ESDSLModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        #sql = kwargs.pop('sql', True)
+        
+        if self._meta.managed is False:
+            registry.update(self)
+            registry.update_related(self)
+        else:            
+            super().save(*args, **kwargs)
+
+
+class Recorte(ESDSLModel):
     data_criacao = models.DateField(verbose_name=_('Data de Criação'))
     data_modificacao = models.DateTimeField(verbose_name=_('Data de Modificação'))
     numeracao_unica = models.CharField(max_length=20, verbose_name=_('Numeração Única'))

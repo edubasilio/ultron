@@ -6,7 +6,7 @@ networks:
 services:
     # elasticsearch:
     #     env_file: ./.env
-    #     image: bitnami/elasticsearch:7.8.1
+    #     image: bitnami/elasticsearch:7.9.1
     #     container_name: ultron_elasticsearch
     #     ports:
     #         - "${ELASTICSEARCH_PORT}:9200"
@@ -23,8 +23,8 @@ services:
             - "${RABBITMQ_MANAGER_PORT_NUMBER}:15672"
         networks:
             - ultron_net
-        volumes:
-            - "${RABBITMQ_DATA_PATH}:/bitnami" 
+        # volumes:
+        #     - "${RABBITMQ_DATA_PATH}:/bitnami"
 
     ultron_web:
         env_file: ./.env
@@ -43,6 +43,7 @@ services:
             - ${MEDIA_PATH}:/app/media
         depends_on:
             - rabbitmq
+            # - elasticsearch
         
     # logstash:
     #     env_file: ./.env
@@ -69,7 +70,7 @@ services:
         
     # kibana:
     #     env_file: ./.env
-    #     image: bitnami/kibana:7.8.1
+    #     image: bitnami/kibana:7.9.1
     #     container_name: ultron_kibana
     #     ports:
     #         - "${KIBANA_PORT}:5601"

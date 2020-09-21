@@ -7,14 +7,18 @@ from .models import Recorte
 from config.models import RecorteQueryConfig
 
 
-# @shared_task
-# def sample_task():
-#     print("!!!! The sample task just ran!!!!")
+@shared_task
+def send_recortes_to_es(recortes):
+    print("-------------------------------")
+    print("--- Recortes:", len(recortes))
+    return recortes
 
 @shared_task
-def get_recortes(loops=math.inf):
+def get_recortes_from_db_task(loops=math.inf):
     rqc = RecorteQueryConfig.objects.last()
+    rqc = RecorteQueryConfig.objects.create() if rqc is None else rqc
     last_indexing_moment = rqc.last_indexing_moment
+    begin_moment = timezone.datetime.now()
     offset = rqc.offset
     limit = rqc.limit
     
@@ -30,13 +34,19 @@ def get_recortes(loops=math.inf):
         offset = _limit + 1
         r_len = len(_recortes)
         print(_recortes[0])
+        
+        print("@@@ Recortes:", len(_recortes))
         # remove recortes q não foram modificados
-        last_indexing_moment = timezone.datetime.now()
-        _recortes = [r for r in _recortes if timezone.make_naive(r.get('data_modificacao')) > last_indexing_moment]
+        _recortes = [r for r in _recortes if r.get('data_modificacao') > last_indexing_moment]
+        print("### Recortes:", len(_recortes))
+
+        # envia _recortes para rabbitmq
+        if len(_recortes) > 0:
+            send_recortes_to_es.apply_async((_recortes,), ignore_result=True)
 
         if r_len < limit:
             break
     
     rqc.offset = offset
-    rqc.last_indexing_moment = last_indexing_moment
+    rqc.last_indexing_moment = begin_moment
     rqc.save()

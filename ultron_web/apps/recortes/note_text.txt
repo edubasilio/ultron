@@ -1,3 +1,5 @@
 {{ object.title }}
 {{ object.codigo_diario }}
-{{ object.body }}
+{{ object.recorte }}
+{{ object.numeracao_unica }}
+{{ object.caderno }}
