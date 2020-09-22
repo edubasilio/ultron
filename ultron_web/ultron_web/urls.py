@@ -17,17 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework.authtoken import views
+from entities.api.views import token_refresh
 
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('api/token-auth/', views.obtain_auth_token),
-#     path('api/user/', views.obtain_auth_token),
-
-# ]
 
 api_urlpatterns = [
     path('token-auth/', views.obtain_auth_token),
+    path('token-refresh/', token_refresh),
     path('entities/', include('entities.api.urls')),
 ]
 

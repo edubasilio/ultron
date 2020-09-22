@@ -180,7 +180,11 @@ ELASTICSEARCH_DSL = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'entities.authentication.UltronAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+TOKEN_EXPIRED_TIME = config('TOKEN_EXPIRED_TIME', default=60, cast=int)
