@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_elasticsearch_dsl',
+    'drf_yasg',
 
     # local apps
     'recortes.apps.RecortesConfig',
@@ -74,7 +75,10 @@ ROOT_URLCONF = 'ultron_web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'statics'),
+            os.path.join(BASE_DIR, 'statics/html'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
