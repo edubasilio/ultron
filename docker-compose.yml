@@ -15,14 +15,14 @@ services:
     #     networks:
     #         - ultron_net
 
-    rabbitmq:
-        env_file: ./.env
-        image: bitnami/rabbitmq:3.8.8
-        container_name: ultron_rabbitmq
-        ports:
-            - "${RABBITMQ_MANAGER_PORT_NUMBER}:15672"
-        networks:
-            - ultron_net
+    # rabbitmq:
+    #     env_file: ./.env
+    #     image: bitnami/rabbitmq:3.8.8
+    #     container_name: ultron_rabbitmq
+    #     ports:
+    #         - "${RABBITMQ_MANAGER_PORT_NUMBER}:15672"
+    #     networks:
+    #         - ultron_net
         # volumes:
         #     - "${RABBITMQ_DATA_PATH}:/bitnami"
 
@@ -41,9 +41,9 @@ services:
             - ./ultron_web:/app/ultron_web
             - ${STATICFILES_PATH}:/app/staticfiles
             - ${MEDIA_PATH}:/app/media
-        depends_on:
-            - rabbitmq
-            # - elasticsearch
+        # depends_on:
+        #     - rabbitmq
+        #     - elasticsearch
         
     # logstash:
     #     env_file: ./.env

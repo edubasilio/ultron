@@ -17,6 +17,7 @@ def is_token_expired(token):
     time_elapsed = timezone.now() - token.created
     left_time = timedelta(seconds = settings.TOKEN_EXPIRED_TIME) - time_elapsed
     is_token_expired = left_time < timedelta(seconds = 0)
+    
     if is_token_expired:
         token.delete()
     return is_token_expired
